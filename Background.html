@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMOD Presentation - WACV 2024</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --slide-width: 1280px;
+            --slide-height: 720px;
+            --primary-color: #2563eb;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #1a1a1a;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .presentation-container {
+            width: var(--slide-width);
+            height: var(--slide-height);
+            position: relative;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: none;
+            padding: 60px;
+            box-sizing: border-box;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+        .header-line {
+            border-left: 8px solid var(--primary-color);
+            padding-left: 20px;
+            margin-bottom: 40px;
+        }
+        .img-placeholder {
+            background-color: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            color: #9ca3af;
+        }
+        .bullet-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        .bullet-icon {
+            color: var(--primary-color);
+            margin-right: 15px;
+            margin-top: 6px;
+        }
+        .page-number {
+            position: absolute;
+            bottom: 40px;
+            right: 60px;
+            font-weight: bold;
+            color: #d1d5db;
+            font-size: 1.5rem;
+        }
+        .source-tag {
+            position: absolute;
+            bottom: 40px;
+            left: 60px;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        /* Navigation Hint */
+        .nav-hint {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation-container" id="presentation">
+    <!-- Slide 1: Title -->
+    <div class="slide active bg-gray-50">
+        <div class="flex-grow flex flex-col justify-center items-center text-center">
+            <h2 class="text-2xl font-bold text-blue-600 mb-4 tracking-widest">WACV 2024</h2>
+            <h1 class="text-5xl font-extrabold text-gray-900 leading-tight mb-8 max-w-5xl">
+                The Background Also Matters:<br>Background-Aware Motion-Guided Objects Discovery
+            </h1>
+            <div class="w-24 h-1 bg-blue-600 mb-8"></div>
+            <p class="text-2xl text-gray-600">발표자: 박천웅 / 날짜: 2026. 03. 18</p>
+        </div>
+        <div class="absolute inset-0 opacity-5 pointer-events-none">
+            <i class="fas fa-project-diagram fa-10x absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+        </div>
+        <div class="page-number">01</div>
+    </div>
+
+    <!-- Slide 2: Why this paper? -->
+    <div class="slide">
+        <div class="header-line">
+            <h1 class="text-4xl font-bold text-gray-800">02. 왜 이 논문을 골랐는가</h1>
+        </div>
+        <div class="grid grid-cols-2 gap-10 flex-grow items-center">
+            <div class="space-y-6">
+                <div class="bullet-item">
+                    <i class="fas fa-lock bullet-icon"></i>
+                    <p class="text-xl text-gray-700">기존 detector는 <strong>닫힌 클래스(Closed-set)</strong> 한계가 존재함</p>
+                </div>
+                <div class="bullet-item">
+                    <i class="fas fa-wind bullet-icon"></i>
+                    <p class="text-xl text-gray-700">배경 차분이나 motion cue는 <strong>노이즈</strong>가 많아 실무 적용이 어려움</p>
+                </div>
+                <div class="bullet-item">
+                    <i class="fas fa-border-style bullet-icon"></i>
+                    <p class="text-xl text-gray-700">핵심은 <strong>배경과 객체 경계</strong>를 얼마나 안정적으로 나누는가에 있음</p>
+                </div>
+                <div class="bullet-item">
+                    <i class="fas fa-lightbulb bullet-icon"></i>
+                    <p class="text-xl text-gray-700">이 논문은 그 경계를 <strong>object discovery 과정 안에서</strong> 직접 다룸</p>
+                </div>
+            </div>
+            <div class="flex flex-col">
+                <div class="img-placeholder h-64 w-full mb-4">
+                    <img src="./src/figure1.1.png" class="w-full h-full object-contain p-2">
+                </div>
+                <p class="text-gray-500 italic text-center">"비지도 상황에서의 배경/객체 분리 어려움"</p>
+            </div>
+        </div>
+        <div class="page-number">02</div>
+    </div>
+
+    <!-- Slide 3: Problem Definition -->
+    <div class="slide">
+        <div class="header-line">
+            <h1 class="text-4xl font-bold text-gray-800">03. 문제 정의: 기존 방법의 한계</h1>
+        </div>
+        <div class="flex flex-row gap-10 flex-grow">
+            <div class="img-placeholder w-3/5 h-full">
+                <img src="./src/figure1.png" class="w-full h-full object-contain p-2">
+                <p>Background Over-segmentation 현상 시각화</p>
+            </div>
+            <div class="w-2/5 flex flex-col justify-center space-y-8">
+                <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                    <h3 class="font-bold text-xl mb-2">핵심 문제점</h3>
+                    <ul class="list-disc list-inside space-y-3 text-gray-700">
+                        <li>Foreground 객체 탐색에만 집중</li>
+                        <li>배경이 여러 slot에 흩어진 noise로 남음</li>
+                        <li>기존 metric은 배경 실패를 측정 못함</li>
+                        <li>Object vs Noise 판단 기준 부재</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="page-number">03</div>
+    </div>
+
+    <!-- Slide 4: Task Definition -->
+    <div class="slide">
+        <div class="header-line">
+            <h1 class="text-4xl font-bold text-gray-800">04. 이 논문이 다루는 Task</h1>
+        </div>
+        <div class="flex-grow flex flex-col justify-center items-center">
+            <div class="grid grid-cols-2 gap-20 w-full max-w-4xl">
+                <div class="text-center">
+                    <div class="img-placeholder h-48 mb-4 bg-red-50 border-red-200">
+                        <i class="fas fa-running fa-3x text-red-300"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Moving Object Only</h3>
+                    <p class="text-gray-500">일반적인 Motion Segmentation</p>
+                </div>
+                <div class="text-center">
+                    <div class="img-placeholder h-48 mb-4 bg-green-50 border-green-200">
+                        <div class="flex gap-4">
+                            <i class="fas fa-running fa-3x text-green-400"></i>
+                            <i class="fas fa-car-side fa-3x text-green-400"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Moving + Static Object</h3>
+                    <p class="text-gray-500">BMOD의 목표 (True Foreground)</p>
+                </div>
+            </div>
+            <div class="mt-12 text-center max-w-3xl">
+                <p class="text-2xl text-gray-700 leading-relaxed">
+                    "단순히 움직이는 물체를 찾는 것이 아니라,<br>
+                    <span class="text-blue-600 font-bold underline">Object Discovery와 Separation을 함께 학습</span>하는 것"
+                </p>
+            </div>
+        </div>
+        <div class="page-number">04</div>
+    </div>
+
+    <!-- Slide 5: Method Overview -->
+    <div class="slide flex flex-col h-full pb-16"> <!-- 하단 여백을 pb-16으로 최적화 -->
+        
+        <!-- 1. 헤더 영역 -->
+        <div class="header-line mb-4">
+            <h1 class="text-4xl font-bold text-gray-800">05. 전체 방법 개요 (Pipeline)</h1>
+        </div>
+
+        <!-- 2. 이미지 및 요약 텍스트 영역 (중앙 배치) -->
+        <!-- min-h-0은 flex 아이템이 부모 크기를 넘어가지 않게 방지합니다 -->
+        <div class="flex-grow flex flex-col items-center justify-center min-h-0 mb-4">
+            <!-- 이미지가 잘리지 않도록 최대 높이를 70% 정도로 제한 -->
+            <div class="w-full h-full flex items-center justify-center overflow-hidden">
+                <img src="./src/figure2.png" class="max-w-full max-h-full object-contain shadow-sm rounded">
+            </div>
+            
+            <!-- 요약 텍스트: 이미지 바로 아래에 명확히 배치 -->
+            <p class="text-gray-500 text-lg mt-3 font-semibold bg-gray-50 px-4 py-1 rounded-full border border-gray-200">
+                Encoder &rarr; ConvGRU &rarr; Slot Attention &rarr; Reconstruction
+            </p>
+        </div>
+
+        <!-- 3. 하단 강조 박스 -->
+        <div class="bg-gray-800 text-white py-3 px-6 rounded-xl text-center mb-4 shadow-md">
+            <p class="text-2xl font-medium">
+                "Motion Supervision &rarr; Foreground Generalization &rarr; Background Isolation"
+            </p>
+        </div>
+
+        <!-- 4. 절대 좌표 요소들 -->
+        <div class="source-tag opacity-60">Source: Kara et al., WACV 2024, Fig. 2</div>
+        <div class="page-number opacity-60">05</div>
+        
+    </div>
+
+    <!-- Slide 6: Key Idea 1 -->
+    <div class="slide">
+        <div class="header-line">
+            <h1 class="text-4xl font-bold text-gray-800">06. 핵심 아이디어 1: True Foreground로의 확장</h1>
+        </div>
+        <div class="grid grid-cols-2 gap-10 flex-grow items-center">
+            <div class="space-y-8">
+                <div class="bullet-item">
+                    <div class="bg-blue-100 p-4 rounded-full mr-4"><i class="fas fa-expand-arrows-alt text-blue-600"></i></div>
+                    <div>
+                        <h3 class="text-2xl font-bold">Motion to True Foreground</h3>
+                        <p class="text-lg text-gray-600">Moving mask를 최종 정답이 아닌 시작점으로 활용</p>
+                    </div>
+                </div>
+                <div class="bullet-item">
+                    <div class="bg-blue-100 p-4 rounded-full mr-4"><i class="fas fa-sync text-blue-600"></i></div>
+                    <div>
+                        <h3 class="text-2xl font-bold">Generalization 유도</h3>
+                        <p class="text-lg text-gray-600">Static object(예: 주차된 차)까지 포함하도록 학습</p>
+                    </div>
+                </div>
+            </div>
+            <div class="img-placeholder h-full">
+                <img src="./src/figure2.2.png" class="w-full h-full object-contain p-2">
+                <p>m<sub>fg</sub>, W<sub>fg</sub>, L<sub>NLL,reg</sub> 시각화</p>
+            </div>
+        </div>
+        <div class="page-number">06</div>
+    </div>
+
+    <!-- Slide 7: Key Idea 2 -->
+    <div class="slide">
+        <div class="header-line">
+            <h1 class="text-4xl font-bold text-gray-800">07. 핵심 아이디어 2: Background 고립</h1>
+        </div>
+        <div class="grid grid-cols-2 gap-10 flex-grow items-center">
+            <div class="img-placeholder h-full">
+                <img src="./src/figure2.1.png" class="w-full h-full object-contain p-2">
+                <p>S<sub>bg</sub>, W<sub>bg</sub>, Weighted BCE 관련 도식</p>
+            </div>
+            <div class="space-y-8">
+                <div class="bg-yellow-50 p-8 rounded-2xl border-2 border-yellow-200">
+                    <h3 class="text-2xl font-bold mb-4 text-yellow-800">왜 별도 Slot인가?</h3>
+                    <ul class="space-y-4 text-lg text-gray-700">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> 배경은 단순히 '안 움직이는 영역'이 아님</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Foreground의 <strong>Complement(여집합)</strong> 활용</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> <strong>Weighted BCE</strong>로 작은 객체 흡수 방지</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="page-number">07</div>
+    </div>
+
+    <!-- Slide 8: Experimental Setup -->
+    <div class="slide">
+        <div class="header-line">
+            <h1 class="text-4xl font-bold text-gray-800">08. 실험 설정 및 평가 지표</h1>
+        </div>
+        <div class="grid grid-cols-3 gap-8 flex-grow items-center">
+            <div class="bg-gray-50 p-8 rounded-xl">
+                <h3 class="text-xl font-bold mb-4 text-blue-600"><i class="fas fa-database mr-2"></i>Datasets</h3>
+                <ul class="space-y-2 text-gray-700">
+                    <li>• ParallelDomain (TRI-PD)</li>
+                    <li>• KITTI (Real-world)</li>
+                </ul>
+            </div>
+            <div class="bg-gray-50 p-8 rounded-xl items-center">
+                <h3 class="text-xl font-bold mb-4 text-blue-600"><i class="fas fa-cog mr-2"></i>Settings</h3>
+                <ul class="space-y-2 text-gray-700">
+                    <li>• Base: ResNet18</li>
+                    <li>• Enhanced: DINOv2 (BMOD*)</li>
+                    <li>• GT / Estimated Motion</li>
+                </ul>
+            </div>
+            <div class="bg-gray-50 p-8 rounded-xl items-center">
+                <h3 class="text-xl font-bold mb-4 text-blue-600"><i class="fas fa-chart-line mr-2"></i>Metrics</h3>
+                <ul class="space-y-2 text-gray-700">
+                    <li>• <strong>fg-ARI</strong>: 객체 발견 성능</li>
+                    <li>• <strong>all-ARI</strong>: 배경 포함 전체 성능</li>
+                    <li>• <strong>Jaccard</strong>: 분리 품질 측정</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-number">08</div>
+    </div>
+
+    <!-- Slide 9: Qualitative Results -->
+    <div class="slide">
+        <div class="header-line">
+            <h1 class="text-4xl font-bold text-gray-800">09. 정성 결과: Noise Reduction</h1>
+        </div>
+        <div class="img-placeholder flex-grow mb-4">
+            <img src="./src/figure3.png" class="w-full h-full object-contain p-2">
+            <p>TRI-PD & KITTI 예시 (Input / Baseline / BMOD)</p>
+        </div>
+        <div class="text-center text-xl font-bold text-blue-600">
+            "배경 고립 모델링이 Baseline 대비 random segment가 줄어드는 경향을 보임"
+        </div>
+        <div class="page-number">09</div>
+    </div>
+
+    <!-- Slide 10: Quantitative Results 1 -->
+    <div class="slide flex flex-col h-full pb-16">
+        
+        <!-- 1. 헤더 -->
+        <div class="header-line mb-4">
+            <h1 class="text-4xl font-bold text-gray-800">10. 정량 결과 1: Object Discovery</h1>
+        </div>
+
+        <!-- 2. 표 배치 구역: flex-grow와 min-h-0이 핵심입니다 -->
+        <div class="flex-grow grid grid-cols-2 gap-8 min-h-0 mb-4">
+            
+            <!-- 왼쪽 표 (TRI-PD) -->
+            <div class="flex flex-col h-full min-h-0">
+                <div class="flex-grow bg-white border-2 border-dashed border-gray-200 rounded-lg p-2 flex items-center justify-center overflow-hidden">
+                    <img src="./src/table1.png" class="max-w-full max-h-full object-contain">
+                </div>
+                <p class="text-center text-sm font-bold text-gray-500 mt-2">TRI-PD 성능 비교</p>
+            </div>
+
+            <!-- 오른쪽 표 (KITTI) -->
+            <div class="flex flex-col h-full min-h-0">
+                <div class="flex-grow bg-white border-2 border-dashed border-gray-200 rounded-lg p-2 flex items-center justify-center overflow-hidden">
+                    <img src="./src/table2.png" class="max-w-full max-h-full object-contain">
+                </div>
+                <p class="text-center text-sm font-bold text-gray-500 mt-2">KITTI 성능 비교</p>
+            </div>
+
+        </div>
+
+        <!-- 3. 하단 요약 박스 -->
+        <div class="bg-blue-50 p-4 rounded-xl border-l-4 border-blue-500 shadow-sm">
+            <p class="text-center font-bold text-gray-700 text-lg">
+                <i class="fas fa-check-circle text-blue-500 mr-2"></i>
+                핵심: 배경 모델링이 Foreground 객체 탐지 성능(fg-ARI)도 동시에 향상시킴
+            </p>
+        </div>
+
+        <!-- 4. 하단 태그 -->
+        <div class="source-tag opacity-60">Source: Kara et al., WACV 2024, Table 1, 2</div>
+        <div class="page-number opacity-60">10</div>
+        
+    </div>
+
+    <!-- Slide 11: Quantitative Results 2 -->
+    <div class="slide flex flex-col h-full pb-16">
+        
+        <!-- 1. 헤더 -->
+        <div class="header-line mb-4">
+            <h1 class="text-4xl font-bold text-gray-800">11. 정량 결과 2: Background Separation</h1>
+        </div>
+
+        <!-- 2. 표 영역: min-h-0으로 높이 유연성 확보 -->
+        <div class="flex-grow flex flex-col min-h-0 mb-6">
+            <div class="flex-grow bg-white border-2 border-dashed border-gray-200 rounded-lg p-2 flex items-center justify-center overflow-hidden">
+                <img src="./src/table3.png" class="max-w-full max-h-full object-contain">
+            </div>
+            <p class="text-center text-sm font-bold text-gray-500 mt-2">all-ARI 및 Jaccard Score 비교</p>
+        </div>
+
+        <!-- 3. 하단 핵심 수치 요약 박스 -->
+        <div class="grid grid-cols-2 gap-10 bg-blue-50 p-6 rounded-xl shadow-md border-t-4 border-blue-500">
+            <div class="text-right border-r-2 border-blue-200 pr-10">
+                <p class="text-xs text-blue-500 font-bold uppercase tracking-wider mb-1">TRI-PD (estimated motion)</p>
+                <p class="text-3xl font-extrabold text-gray-800">
+                    Bao <span class="text-gray-400 text-xl font-normal mx-1">6.3</span> 
+                    <i class="fas fa-long-arrow-alt-right text-blue-500 mx-2"></i> 
+                    BMOD <span class="text-blue-600">28.6</span>
+                </p>
+            </div>
+            <div class="text-left pl-10">
+                <p class="text-xs text-blue-500 font-bold uppercase tracking-wider mb-1">KITTI (estimated motion)</p>
+                <p class="text-3xl font-extrabold text-gray-800">
+                    Bao <span class="text-gray-400 text-xl font-normal mx-1">4.2</span> 
+                    <i class="fas fa-long-arrow-alt-right text-blue-500 mx-2"></i> 
+                    BMOD <span class="text-blue-600">17.8</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- 4. 하단 페이지 번호 -->
+        <div class="page-number opacity-60">11</div>
+        
+    </div>
+
+    <!-- Slide 12: Ablation Study -->
+    <div class="slide">
+        <div class="header-line">
+            <h1 class="text-4xl font-bold text-gray-800">12. Ablation & Pseudo-label 분석</h1>
+        </div>
+        <div class="grid grid-cols-2 gap-10 flex-grow">
+            <div class="flex flex-col">
+                <div class="img-placeholder flex-grow mb-4">
+                    <img src="./src/table4.png" class="w-full h-full object-contain p-2">
+                    <p class="text-xs">Design Choice 분석</p>
+                </div>
+                <p class="text-sm text-gray-600">• Naive 설계(Non-moving 직접 할당)는 실패</p>
+            </div>
+            <div class="flex flex-col">
+                <div class="img-placeholder flex-grow mb-4">
+                    <img src="./src/table5.png" class="w-full h-full object-contain p-2">
+                    <p class="text-xs">Pseudo-label Noise 분석</p>
+                </div>
+                <p class="text-sm text-gray-600">• Label 품질 개선 시 성능 대폭 상승 여지 확인</p>
+            </div>
+        </div>
+        <div class="page-number">12</div>
+    </div>
+
+    <!-- Slide 13: Conclusion -->
+    <div class="slide">
+        <div class="header-line">
+            <h1 class="text-4xl font-bold text-gray-800">13. 결론 및 연구 연결</h1>
+        </div>
+        <div class="flex-grow grid grid-cols-2 gap-10">
+            <div class="space-y-6">
+                <h3 class="text-2xl font-bold text-blue-600">Summary</h3>
+                <ul class="space-y-4 text-lg text-gray-700">
+                    <li><i class="fas fa-check-circle mr-2 text-blue-500"></i> 배경 통제 시 객체 구조 학습 효율 증대</li>
+                    <li><i class="fas fa-check-circle mr-2 text-blue-500"></i> Motion cue를 통한 Foreground 일반화 성공</li>
+                    <li><i class="fas fa-check-circle mr-2 text-blue-500"></i> Separation 성능의 비약적 향상</li>
+                </ul>
+            </div>
+            <div class="bg-gray-800 text-white p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6 text-blue-400">내 연구와의 연결</h3>
+                <div class="space-y-4 font-light">
+                    <p>• Change Candidate 품질 관리</p>
+                    <p>• Static Object Retention 전략</p>
+                    <p>• 장기 정지체 해석 및 배경 흡수 방지</p>
+                </div>
+                <div class="mt-10 text-right opacity-30">
+                    <i class="fas fa-link fa-3x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="page-number">13</div>
+    </div>
+</div>
+
+<div class="nav-hint">
+    클릭 또는 방향키(←, →)로 이동
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    function showSlide(index) {
+        if (index >= totalSlides) index = 0;
+        if (index < 0) index = totalSlides - 1;
+        
+        slides.forEach(slide => slide.classList.remove('active'));
+        slides[index].classList.add('active');
+        currentSlide = index;
+    }
+
+    // Click to next slide
+    document.getElementById('presentation').addEventListener('click', () => {
+        showSlide(currentSlide + 1);
+    });
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            showSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft') {
+            showSlide(currentSlide - 1);
+        }
+    });
+</script>
+
+</body>
+</html>
